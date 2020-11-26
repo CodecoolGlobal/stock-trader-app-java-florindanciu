@@ -13,6 +13,11 @@ public class TradingApp {
 	}
 
 	public void start() {
+		Logger logger = new Logger();
+		RemoteURLReader remoteURLReader = new RemoteURLReader();
+		StockAPIService stockAPIService = new StockAPIService(remoteURLReader);
+		Trader trader = new Trader(stockAPIService, logger);
+
 		Scanner keyboard = new Scanner(System.in);
 		System.out.println("Enter a stock symbol (for example aapl):");
 		String symbol = keyboard.nextLine();
@@ -26,15 +31,15 @@ public class TradingApp {
 		}
 
 		try {
-			boolean purchased = Trader.getInstance().buy(symbol, price);
+			boolean purchased = trader.buy(symbol, price);
 			if (purchased) {
-				Logger.getInstance().log("Purchased stock!");
+				logger.log("Purchased stock!");
 			}
 			else {
-				Logger.getInstance().log("Couldn't buy the stock at that price.");
+				logger.log("Couldn't buy the stock at that price.");
 			}
 		} catch (Exception e) {
-			Logger.getInstance().log("There was an error while attempting to buy the stock: " + e.getMessage());
+			logger.log("There was an error while attempting to buy the stock: " + e.getMessage());
 		}
 	}
 }
